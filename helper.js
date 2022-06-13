@@ -14,28 +14,16 @@ function getPrimitive(obj) {
 
 function randomValues(obj) {
   var values = [];
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 100; i++) {
     var keys = Object.keys(obj);
     var randomKey = keys[Math.floor(Math.random() * keys.length)];
     const keyValuePicked = obj[randomKey];
     values.push(getPrimitive(keyValuePicked));
   }
-  return values;
+  return values.filter(a => typeof a === "string");
 }
 
-var obj = {
-  a: [{'b': 'hello'}],
-  b: 'world',
-  c: 'this',
-  d: 'is',
-  e: 'a',
-  f: 'test',
-  g: 'of',
-  h: 'the',
-  i: 'emergency',
-  j: 'broadcast',
-  k: 'system'
-};
+var obj = a.result[0];
 
 randomValues(obj);
 
