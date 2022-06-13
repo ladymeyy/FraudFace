@@ -20,14 +20,29 @@ function randomValues(obj) {
     const keyValuePicked = obj[randomKey];
     values.push(getPrimitive(keyValuePicked));
   }
-  return values.filter(a => typeof a === "string");
+
+  const FORBIDDEN_WORDS = ['@', '_', '-', 'N/A', 'NA', 'None', 'null', 'full' ,'none', 'unknown', 'mismatch', 'NaN', 'no', 'yes', 'True', 'False']
+  return [...new Set(values
+          .filter(a => typeof a === "string")
+          .filter(a => !(/\d/.test(a)))
+          .filter(a => !!a && a !== ' ')
+          .filter(a => !check(FORBIDDEN_WORDS, a))
+          )
+        ];
 }
 
 var obj = a.result[0];
 
 randomValues(obj);
 
-//write a function that takes an array of numbers and returns the sum of the numbers:
+function check(words, string) {
+    for (const i in words) {
+        if (string?.toLowerCase().indexOf(words[i].toLowerCase()) > -1) {
+            return true;
+        }
+    }
+    return false;
+}
 
 function sum(arr) {
   var total = 0;
