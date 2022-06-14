@@ -1,5 +1,5 @@
 
-const a = {"status":"success","result":"good","country":"United States", "Happy":false, "Buyer":true, "Mobile":"iphone", "Crime":"Stealing", "Item Purchased": "teddy bear", "Item stolen":"diamonds" }
+const obj = {"Contact":"Email","country":"United States", "Happy":false, "Buyer":true, "Mobile":"iphone", "Crime":"Stealing", "Item Purchased": "Laptop", "Item stolen":"diamonds", "payment":"credit card", "issuer":"bank"}
 
 const style= ["3D render", "oil painting", "photo", "cartoon", "bauhaus painting", "abstract painting", "oil pastel",
     "comic book cover", "digital art", "futuristic cyborg poster", "pencil and water color drawing" ]
@@ -7,18 +7,24 @@ const style= ["3D render", "oil painting", "photo", "cartoon", "bauhaus painting
 /*List of 10 positive adjectives */
 const adjectives= ["Cheerful", "Elegant", "Joyful", "Glorious", "Cute", "Funny", "Beautiful", "Radiant", "Exquisite"]
 
-/*List of 40 famous painters from the past 1000 years */
+/*List of famous painters from the past 1000 years */
 const artists= ["Leonardo da Vinci", "Michelangelo", "Rembrandt", "Vincent va Gogh", "Johannes Vermeer",
     "Sandro Botticelli", "Diego Velázquez", "Pablo Picasso", "Édouard Manet", "Claude Monet", "Auguste Renoir",
     "Georges Seurat", "Paul Cézanne", "Henri Matisse", "Jackson Pollock", "Andy Warhol", "Mark Rothko",
     "Jasper Johns", "Joan Miró", "Barnett Newman", "Rothko", "Clyfford Still", "Frank Stella", "Robert Rauschenberg",
-    "Ad Reinhardt", "Richard Diebenkorn", "David Hockney", "Lucian Freud", "Bruce Nauman", "Richard Serra", "Anselm Kiefer",
+    "Ad Reinhardt", "Richard Diebenkorn", "David Hockney", "Lucian Freud", "Bruce Nauman", "Richard Serra",
     "Bill Viola", "Gilbert & George", "Gerhard Richter", "Jeff Koons","Damien Hirst", "Cindy Sherman", "Paul Graham"]
 
-const image_element_options = { "style": style, "adjectives": adjectives, "artists": artists }
+const animals = ["Bear", "Tiger", "Bald Eagle", "Dog", "Dragon", "Elephant", "Macaw", "Komodo Dragon", "Panda"]
+
+const image_element_options = { "style": style, "adjectives": adjectives, "artists": artists}
 
 const FORBIDDEN_WORDS = ['@', '_', '-', 'N/A', 'NA', 'None', 'null', 'full' ,'none',
-    'unknown', 'mismatch', 'NaN', 'no', 'yes', 'True', 'False', 'scriptver', 'decline']
+    'unknown', 'mismatch', 'NaN', 'no', 'yes', 'True', 'False', 'decline']
+
+function getRandIndexBylength(length){
+    return Math.floor(Math.random() * length)
+}
 
 /*
 Write a javascript function that takes an object and for each array in object values returns one random value
@@ -26,12 +32,11 @@ Write a javascript function that takes an object and for each array in object va
 function getRandomValuesFromEachArrayInObj(obj) {
     let result = {};
     for (let key in obj) {
-        let randomIndex = Math.floor(Math.random() * obj[key].length);
+        let randomIndex = getRandIndexBylength(obj[key].length)
         result[key]= obj[key][randomIndex];
     }
     return result;
 }
-
 
 function getPrimitive(obj) {
     if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean') {
@@ -46,12 +51,11 @@ function getPrimitive(obj) {
     }
 }
 
-
 function randomValues(obj) {
     var values = [];
     for (var i = 0; i < 100; i++) {
         var keys = Object.keys(obj);
-        var randomKey = keys[Math.floor(Math.random() * keys.length)];
+        var randomKey = keys[getRandIndexBylength(keys.length)];
         const keyValuePicked = obj[randomKey];
         values.push(getPrimitive(keyValuePicked));
     }
@@ -77,19 +81,17 @@ function check(words, string) {
     return false;
 }
 
-
-var obj = a.result[0];
-
-//Generate a creative image description of the following words:
-//'Distrito Especial', 'main', 'Telmex Colombia S.A.', 'decline', 'IrrelevantSite', 'live', 'SA', 'physical'
-words_to_image_desc = randomValues(obj).slice(0, 6).join(',');
+//Words randomly selected from data obj
+//Add a random animal
+//format as  query string
+let words = randomValues(obj)
+words = words.concat(animals[getRandIndexBylength(animals.length)]).slice(3).join(',');
 const image_description_query_prefix = "Generate a creative image description with the following words:"
-const image_description_query = `${image_description_query_prefix} ${words_to_image_desc}`
+const image_description_query = `${image_description_query_prefix} ${words}`
 
 console.log(image_description_query)
 
-
-const OPENAI_API_KEY="Get this from your openai account"
+const OPENAI_API_KEY= "your api-key from openai account"
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -113,7 +115,6 @@ const openai = new OpenAIApi(configuration);
 
     const image_elements = getRandomValuesFromEachArrayInObj(image_element_options)
     const full_desc = `A ${image_elements["adjectives"]} ${image_elements["style"]} of ${generated_description} in style of ${image_elements["artists"]}`
-
 
     console.log(full_desc)
 })();
